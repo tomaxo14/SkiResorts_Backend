@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.example.skiResorts.entities.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Getter
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -46,8 +48,8 @@ public class UserDetailsImpl implements UserDetails {
                 user.getLogin(),
                 user.getName(),
                 user.getSurname(),
-                user.getPassword(),
                 user.getEmail(),
+                user.getPassword(),
                 authorities);
     }
 

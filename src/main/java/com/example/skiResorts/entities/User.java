@@ -26,6 +26,7 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     private Set<Resort> favourites = new HashSet<>();
+    private Location location;
 
     public User(){
 

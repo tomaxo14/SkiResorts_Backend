@@ -3,11 +3,13 @@ package com.example.skiResorts.entities;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Date;  // można zmienić na util
 
 @Getter
 @Setter
+@Document(collection = "ratings")
 public class Rating {
 
     @Id

@@ -65,7 +65,7 @@ public class AuthController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getUsername(),
+                userDetails.getLogin(),
                 userDetails.getName(),
                 userDetails.getSurname(),
                 userDetails.getEmail(),
@@ -90,8 +90,8 @@ public class AuthController {
         User user = new User(signUpRequest.getLogin(),
                 signUpRequest.getName(),
                 signUpRequest.getSurname(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+                encoder.encode(signUpRequest.getPassword()),
+                signUpRequest.getEmail());
 
         Set<String> strRoles = signUpRequest.getRoles();
         Set<Role> roles = new HashSet<>();
