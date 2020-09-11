@@ -39,4 +39,11 @@ public class User {
         this.password = password;
         this.email = email;
     }
+
+    public void addFavourite(Resort favourite) {
+        if (favourites == null) {
+            favourites= new HashSet<>();
+        }
+        favourites.add(favourite);
+    }
 }
