@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -48,7 +49,14 @@ public class UserService {
            return RESORT_NOT_FOUND;
         }
 
-        if (!user.getFavourites().contains(resort)) {
+        boolean alreadyInFavourites = false;
+        for(Resort favResort : user.getFavourites()){
+            if(favResort.getResortId()==resortId){
+                alreadyInFavourites=true;
+                break;
+            }
+        }
+        if (!alreadyInFavourites) {
             user.addFavourite(resort);
             userRepository.save(user);
         } else {

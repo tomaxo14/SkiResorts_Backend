@@ -25,7 +25,7 @@ public class User {
     @DBRef
     private Set<Role> roles = new HashSet<>();
 
-    private Set<Resort> favourites = new HashSet<>();
+    private Set<Resort> favourites;
     private Location location;
 
     public User(){
@@ -42,7 +42,7 @@ public class User {
 
     public void addFavourite(Resort favourite) {
         if (favourites == null) {
-            favourites= new HashSet<>();
+            favourites = new HashSet<>();
         }
         favourites.add(favourite);
     }
