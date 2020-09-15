@@ -43,4 +43,25 @@ public class UserController {
                 return ResponseEntity.badRequest().body("Nie udało się dodać ośrodka do ulubionych");
         }
     }
+
+    @PostMapping("rateResort")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> rateResort(Principal principal, @RequestParam int resortId, @RequestParam int value) {
+        String login = principal.getName();
+        int status = userService.rateResort(login, resortId, value);
+        switch (status) {
+            case UserService.STATUS_OK:
+                return ResponseEntity.ok("Wystawiono ocenę");
+            case UserService.RATING_CHANGED:
+                return ResponseEntity.ok("Zmieniono ocenę");
+            case UserService.VALUE_NOT_IN_RANGE:
+                return ResponseEntity.badRequest().body("Wartość oceny musi być liczbą całkowitą z przediału <1,5>");
+            case UserService.USER_NOT_FOUND:
+                return ResponseEntity.badRequest().body("Nie znaleziono użytkownika");
+            case UserService.RESORT_NOT_FOUND:
+                return ResponseEntity.badRequest().body("Nie znaleziono ośrodka o podanym id");
+            default:
+                return ResponseEntity.badRequest().body("Nie udało się ocenić ośrodka");
+        }
+    }
 }

@@ -26,6 +26,7 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     private Set<Resort> favourites;
+    private Set<Rating> ratings;
     private Location location;
 
     public User(){
@@ -45,5 +46,12 @@ public class User {
             favourites = new HashSet<>();
         }
         favourites.add(favourite);
+    }
+
+    public void addRating(Rating rating) {
+        if (ratings == null) {
+            ratings = new HashSet<>();
+        }
+        ratings.add(rating);
     }
 }

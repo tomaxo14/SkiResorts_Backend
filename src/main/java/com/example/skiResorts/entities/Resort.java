@@ -24,6 +24,8 @@ public class Resort {
     private int platters;
     private int carpets;
     private boolean ifSnowPark;
+    private int numberOfRatings;
+    private int sumOfRatings;
 
     public Resort(String name, int foundationYear, int blueSlopes, int redSlopes, int blackSlopes, int chairlifts,
                   int gondolas, int tBars, int platters, int carpets, boolean ifSnowPark) {
@@ -38,5 +40,20 @@ public class Resort {
         this.platters = platters;
         this.carpets = carpets;
         this.ifSnowPark = ifSnowPark;
+        this.numberOfRatings = 0;
+        this.sumOfRatings = 0;
+    }
+
+    public void incrementRatings() {
+        numberOfRatings++;
+    }
+
+    public void decrementRatings() {
+        numberOfRatings--;
+    }
+
+
+    public void addToSum(int newestValue){
+        sumOfRatings+=newestValue;
     }
 }
