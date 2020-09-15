@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
@@ -27,4 +29,14 @@ public class ResortController {
         Resort resort = new Resort("Białka Tatrzańska", 1990, 10, 8, 3, 4, 1, 5, 3, 1, false);
         return ResponseEntity.ok(resortService.addResort(resort));
     }
+
+    @GetMapping("/resorts")
+    public ResponseEntity<?> getAllResorts() {
+        return ResponseEntity.ok(resortService.getAllResorts());
+    }
+
+//    @GetMapping("/resort")
+//    public ResponseEntity<?> getResort(@RequestParam int resortId) {
+//        return ResponseEntity.ok(resortService.getResort(resortId));
+//    }
 }
