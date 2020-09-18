@@ -14,10 +14,17 @@ public class Location {
     private int locationId;
     private String town;
     private String zipCode;
-    private double longitude;
-    private double latitude;
+    private String longitude;
+    private String latitude;
+    private String country;
 
-    public Location(String town, String zipCode, double longitude, double latitude) {
+    public Location(String latitude, String longitude,  String country) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.country = country;
+    }
+
+    public Location(String town, String zipCode, String longitude, String latitude) {
         this.town = town;
         this.zipCode = zipCode;
         this.longitude = longitude;

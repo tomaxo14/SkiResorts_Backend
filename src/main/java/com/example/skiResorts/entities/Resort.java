@@ -13,6 +13,7 @@ public class Resort {
     @Id
     private int resortId;
 
+    private String apiResortId;
     private String name;
     private int foundationYear;
     private int blueSlopes;
@@ -26,6 +27,16 @@ public class Resort {
     private boolean ifSnowPark;
     private int numberOfRatings;
     private int sumOfRatings;
+    private String website;
+    private Location location;
+
+
+    public Resort(String apiResortId, String name, String website, Location location) {
+        this.apiResortId = apiResortId;
+        this.name = name;
+        this.website = website;
+        this.location = location;
+    }
 
     public Resort(String name, int foundationYear, int blueSlopes, int redSlopes, int blackSlopes, int chairlifts,
                   int gondolas, int tBars, int platters, int carpets, boolean ifSnowPark) {
