@@ -22,13 +22,13 @@ public class ResortController {
         this.resortService = resortService;
     }
 
-    @PostMapping("/addResort")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> addResort(Principal principal) {
-
-        Resort resort = new Resort("Białka Tatrzańska", 1990, 10, 8, 3, 4, 1, 5, 3, 1, false);
-        return ResponseEntity.ok(resortService.addResort(resort));
-    }
+//    @PostMapping("/addResort")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<?> addResort(Principal principal) {
+//
+//        Resort resort = new Resort("Białka Tatrzańska", 1990, 10, 8, 3, 4, 1, 5, 3, 1, false);
+//        return ResponseEntity.ok(resortService.addResort(resort));
+//    }
 
     @GetMapping("/resorts")
     public ResponseEntity<?> getAllResorts() {

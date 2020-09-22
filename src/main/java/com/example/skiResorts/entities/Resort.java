@@ -38,22 +38,22 @@ public class Resort {
         this.location = location;
     }
 
-    public Resort(String name, int foundationYear, int blueSlopes, int redSlopes, int blackSlopes, int chairlifts,
-                  int gondolas, int tBars, int platters, int carpets, boolean ifSnowPark) {
-        this.name = name;
-        this.foundationYear = foundationYear;
-        this.blueSlopes = blueSlopes;
-        this.redSlopes = redSlopes;
-        this.blackSlopes = blackSlopes;
-        this.chairlifts = chairlifts;
-        this.gondolas = gondolas;
-        this.tBars = tBars;
-        this.platters = platters;
-        this.carpets = carpets;
-        this.ifSnowPark = ifSnowPark;
-        this.numberOfRatings = 0;
-        this.sumOfRatings = 0;
-    }
+//    public Resort(String name, int foundationYear, int blueSlopes, int redSlopes, int blackSlopes, int chairlifts,
+//                  int gondolas, int tBars, int platters, int carpets, boolean ifSnowPark) {
+//        this.name = name;
+//        this.foundationYear = foundationYear;
+//        this.blueSlopes = blueSlopes;
+//        this.redSlopes = redSlopes;
+//        this.blackSlopes = blackSlopes;
+//        this.chairlifts = chairlifts;
+//        this.gondolas = gondolas;
+//        this.tBars = tBars;
+//        this.platters = platters;
+//        this.carpets = carpets;
+//        this.ifSnowPark = ifSnowPark;
+//        this.numberOfRatings = 0;
+//        this.sumOfRatings = 0;
+//    }
 
     public void incrementRatings() {
         numberOfRatings++;

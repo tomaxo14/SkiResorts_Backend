@@ -10,6 +10,7 @@ import org.springframework.validation.ObjectError;
 
 import java.util.Set;
 
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class TempResort {
     private TempRegion[] Region;
 
     public TempResort(TempSkiArea skiArea, TempRegion[] region) {
-        SkiArea = skiArea;
-        Region = region;
+        this.SkiArea = skiArea;
+        this.Region = region;
     }
 }

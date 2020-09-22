@@ -3,13 +3,16 @@ package com.example.skiResorts.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
 
 @Getter
 @Setter
 public class TempSkiArea {
 
-    private String id;
+
+    private String number;
+
     private String name;
     private String official_website;
     private String geo_lat;
@@ -21,8 +24,9 @@ public class TempSkiArea {
     private boolean has_downhill;
     private boolean has_nordic;
 
-    public TempSkiArea(String name, String official_website, String geo_lat, String geo_lng, String top_elevation, String bottom_elevation, String vertical_drop, String operating_status, boolean has_downhill, boolean has_nordic) {
+    public TempSkiArea(String number, String name, String official_website, String geo_lat, String geo_lng, String top_elevation, String bottom_elevation, String vertical_drop, String operating_status, boolean has_downhill, boolean has_nordic) {
 
+        this.number = number;
         this.name = name;
         this.official_website = official_website;
         this.geo_lat = geo_lat;
@@ -34,4 +38,5 @@ public class TempSkiArea {
         this.has_downhill = has_downhill;
         this.has_nordic = has_nordic;
     }
+
 }
