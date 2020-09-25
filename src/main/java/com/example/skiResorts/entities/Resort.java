@@ -29,6 +29,7 @@ public class Resort {
     private int sumOfRatings;
     private String website;
     private Location location;
+    private double avgRating;
 
 
     public Resort(String apiResortId, String name, String website, Location location) {
@@ -66,5 +67,9 @@ public class Resort {
 
     public void addToSum(int newestValue){
         sumOfRatings+=newestValue;
+    }
+
+    public void updateAvgRating () {
+        avgRating = (double)sumOfRatings/numberOfRatings;
     }
 }

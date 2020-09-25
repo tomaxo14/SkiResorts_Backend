@@ -126,6 +126,7 @@ public class UserService {
 
         resort.incrementRatings();
         resort.addToSum(value);
+        resort.updateAvgRating();
         resortRepository.save(resort);
 
         user.addRating(rating);
