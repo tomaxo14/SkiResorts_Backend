@@ -118,6 +118,7 @@ public class UserService {
             user.getRatings().remove(oldRating);
             resort.addToSum(-oldValue);
             resort.decrementRatings();
+            resort.updateAvgRating();
         }
 
         Rating rating = new Rating(resortId, login, value, new Date());
