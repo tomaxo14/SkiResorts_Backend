@@ -94,15 +94,8 @@ public class ResortService {
     }
 
 
-//    public Resort getResort (int resortId) {
-//        Optional<Resort> resortOpt = resortRepository.findById(resortId);
-//        Resort resort;
-//        if (resortOpt.isPresent()){
-//            resort = resortOpt.get();
-//        } else {
-//            return RESORT_NOT_FOUND;
-//        }
-//        return resortRepository.findById(resortId);
-//    }
+    public Optional<Resort> getResortDetails (int resortId) {
+        return resortRepository.findById(resortId);
+    }
 
 }

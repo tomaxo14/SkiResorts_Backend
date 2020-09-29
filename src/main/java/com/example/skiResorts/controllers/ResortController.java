@@ -36,10 +36,10 @@ public class ResortController {
         return ResponseEntity.ok(resortService.getAllResorts());
     }
 
-//    @GetMapping("/resort")
-//    public ResponseEntity<?> getResort(@RequestParam int resortId) {
-//        return ResponseEntity.ok(resortService.getResort(resortId));
-//    }
+    @GetMapping("/resortDetails")
+    public ResponseEntity<?> getResortDetails(@RequestParam int resortId) {
+        return ResponseEntity.ok(resortService.getResortDetails(resortId));
+    }
 
 
     @PostMapping("/importSkiMaps")
