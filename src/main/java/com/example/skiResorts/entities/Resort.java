@@ -13,7 +13,7 @@ public class Resort {
     @Id
     private int resortId;
 
-    private String apiResortId;
+    private String apiResortNumber;
     private String name;
     private int foundationYear;
     private int blueSlopes;
@@ -30,10 +30,11 @@ public class Resort {
     private String website;
     private Location location;
     private double avgRating;
+    private String skiMap;
 
 
-    public Resort(String apiResortId, String name, String website, Location location) {
-        this.apiResortId = apiResortId;
+    public Resort(String apiResortNumber, String name, String website, Location location) {
+        this.apiResortNumber = apiResortNumber;
         this.name = name;
         this.website = website;
         this.location = location;

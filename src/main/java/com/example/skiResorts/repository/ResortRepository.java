@@ -13,5 +13,6 @@ public interface ResortRepository extends MongoRepository<Resort, Integer> {
     Resort save(Resort resort);
     List<Resort> findAll();
     Optional<Resort> findById(Integer resortId);
+    Optional<Resort> findResortByApiResortNumber(String apiId);
 
 }
