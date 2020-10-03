@@ -3,8 +3,11 @@ package com.example.skiResorts.security.services;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.example.skiResorts.entities.Rating;
+import com.example.skiResorts.entities.Resort;
 import com.example.skiResorts.entities.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,14 +32,19 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
+    private Set<Resort> favourites;
+    private Set<Rating> ratings;
+
     public UserDetailsImpl(String login, String name, String surname, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+                           Collection<? extends GrantedAuthority> authorities, Set<Resort> favourites, Set<Rating> ratings) {
         this.login = login;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.favourites = favourites;
+        this.ratings = ratings;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -50,7 +58,9 @@ public class UserDetailsImpl implements UserDetails {
                 user.getSurname(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities);
+                authorities,
+                user.getFavourites(),
+                user.getRatings());
     }
 
     @Override
