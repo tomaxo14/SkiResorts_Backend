@@ -75,7 +75,7 @@ public class UserService {
         return STATUS_OK;
     }
 
-    public int rateResort(String login, int resortId, int value) {
+    public int rateResort(String login, int resortId, int value, String message) {
 
         if(!Rating.possibleValues.contains(value)) {
             return VALUE_NOT_IN_RANGE;
@@ -116,18 +116,22 @@ public class UserService {
         if(alreadyRated){
             ratingRepository.delete(oldRating);
             user.getRatings().remove(oldRating);
+            resort.getOpinions().remove(oldRating);
             resort.addToSum(-oldValue);
             resort.decrementRatings();
             resort.updateAvgRating();
         }
 
-        Rating rating = new Rating(resortId, login, value, new Date());
+        Rating rating = new Rating(resortId, login, value, new Date(), message);
         rating.setRatingId(counterService.getNextId("rating"));
         ratingRepository.save(rating);
 
         resort.incrementRatings();
         resort.addToSum(value);
         resort.updateAvgRating();
+        if (rating.getMessage()!=null) {
+            resort.addOpinion(rating);
+        }
         resortRepository.save(resort);
 
         user.addRating(rating);

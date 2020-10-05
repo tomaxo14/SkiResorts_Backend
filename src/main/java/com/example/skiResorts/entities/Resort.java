@@ -5,6 +5,9 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Document(collection = "resorts")
@@ -31,6 +34,7 @@ public class Resort {
     private Location location;
     private double avgRating;
     private String skiMap;
+    private Set<Rating> opinions;
 
 
     public Resort(String apiResortNumber, String name, String website, Location location) {
@@ -72,5 +76,12 @@ public class Resort {
 
     public void updateAvgRating () {
         avgRating = (double)sumOfRatings/numberOfRatings;
+    }
+
+    public void addOpinion(Rating rating) {
+        if(opinions == null) {
+            opinions = new HashSet<>();
+        }
+        opinions.add(rating);
     }
 }

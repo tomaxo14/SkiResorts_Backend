@@ -46,9 +46,9 @@ public class UserController {
 
     @PostMapping("rateResort")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> rateResort(Principal principal, @RequestParam int resortId, @RequestParam int value) {
+    public ResponseEntity<?> rateResort(Principal principal, @RequestParam int resortId, @RequestParam int value, @RequestParam(required = false) String message) {
         String login = principal.getName();
-        int status = userService.rateResort(login, resortId, value);
+        int status = userService.rateResort(login, resortId, value, message);
         switch (status) {
             case UserService.STATUS_OK:
                 return ResponseEntity.ok("Wystawiono ocenę");
