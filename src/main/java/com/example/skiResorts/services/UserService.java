@@ -143,4 +143,11 @@ public class UserService {
 
         return STATUS_OK;
     }
+
+    public Set<Rating> yourRatings(String login) {
+        Optional<User> userOpt = getUser(login);
+        User user = userOpt.get();
+
+        return user.getRatings();
+    }
 }

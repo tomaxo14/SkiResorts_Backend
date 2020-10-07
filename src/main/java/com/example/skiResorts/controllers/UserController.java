@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -63,5 +64,12 @@ public class UserController {
             default:
                 return ResponseEntity.badRequest().body("Nie udało się ocenić ośrodka");
         }
+    }
+
+    @GetMapping("yourRatings")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> yourRatings(Principal principal) {
+        String login = principal.getName();
+        return ResponseEntity.ok(userService.yourRatings(login));
     }
 }
