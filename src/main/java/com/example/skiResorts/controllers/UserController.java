@@ -45,6 +45,26 @@ public class UserController {
         }
     }
 
+    @PostMapping("/deleteFavourite")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> deleteFavourite(Principal principal, @RequestParam int resortId) {
+        String login = principal.getName();
+        int status = userService.deleteFavourite(login, resortId);
+
+        switch (status) {
+            case UserService.STATUS_OK:
+                return ResponseEntity.ok("Usunięto ośrodek z ulubionych");
+            case UserService.USER_NOT_FOUND:
+                return ResponseEntity.badRequest().body("Nie znaleziono użytkownika");
+            case UserService.RESORT_NOT_FOUND:
+                return ResponseEntity.badRequest().body("Nie znaleziono ośrodka o podanym id");
+            case UserService.RESORT_ALREADY_IN_FAVOURITES:
+                return ResponseEntity.badRequest().body("Ten ośrodek nie jest w ulubionych, nie możesz go więc usunąć");
+            default:
+                return ResponseEntity.badRequest().body("Nie udało się usunąć ośrodka z ulubionych");
+        }
+    }
+
     @PostMapping("rateResort")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> rateResort(Principal principal, @RequestParam int resortId, @RequestParam int value, @RequestParam(required = false) String message) {
@@ -71,5 +91,12 @@ public class UserController {
     public ResponseEntity<?> yourRatings(Principal principal) {
         String login = principal.getName();
         return ResponseEntity.ok(userService.yourRatings(login));
+    }
+
+    @GetMapping("yourFavourites")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> yourFavourites(Principal principal) {
+        String login = principal.getName();
+        return ResponseEntity.ok(userService.yourFavourites(login));
     }
 }

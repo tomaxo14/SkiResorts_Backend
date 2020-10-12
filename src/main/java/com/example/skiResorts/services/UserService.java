@@ -23,6 +23,7 @@ public class UserService {
     public final static int RESORT_ALREADY_IN_FAVOURITES = 3;
     public final static int RATING_CHANGED = 4;
     public final static int VALUE_NOT_IN_RANGE = 5;
+    public final static int RESORT_NOT_IN_FAVOURITES = 6;
 
     private final UserRepository userRepository;
     private final ResortRepository resortRepository;
@@ -75,6 +76,41 @@ public class UserService {
         return STATUS_OK;
     }
 
+    public int deleteFavourite(String login, int resortId) {
+
+        Optional<User> userOpt = getUser(login);
+        User user;
+        if(userOpt.isPresent()) {
+            user = userOpt.get();
+        } else {
+            return USER_NOT_FOUND;
+        }
+
+        Optional<Resort> resortOpt = resortRepository.findById(resortId);
+        Resort resort;
+        if(resortOpt.isPresent()) {
+            resort = resortOpt.get();
+        } else {
+            return RESORT_NOT_FOUND;
+        }
+
+        boolean alreadyInFavourites = false;
+        for(Resort favResort : user.getFavourites()){
+            if(favResort.getResortId()==resortId){
+                alreadyInFavourites=true;
+                break;
+            }
+        }
+        if (!alreadyInFavourites) {
+            return RESORT_NOT_IN_FAVOURITES;
+        } else {
+            user.removeFavourite(resort);
+            userRepository.save(user);
+        }
+
+        return STATUS_OK;
+    }
+
     public int rateResort(String login, int resortId, int value, String message) {
 
         if(!Rating.possibleValues.contains(value)) {
@@ -116,7 +152,9 @@ public class UserService {
         if(alreadyRated){
             ratingRepository.delete(oldRating);
             user.getRatings().remove(oldRating);
-            resort.getOpinions().remove(oldRating);
+            if(oldRating.getMessage()!=null) {
+                resort.getOpinions().remove(oldRating);
+            }
             resort.addToSum(-oldValue);
             resort.decrementRatings();
             resort.updateAvgRating();
@@ -150,4 +188,12 @@ public class UserService {
 
         return user.getRatings();
     }
+
+    public Set<Resort> yourFavourites(String login) {
+        Optional<User> userOpt = getUser(login);
+        User user = userOpt.get();
+
+        return  user.getFavourites();
+    }
+
 }

@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -83,5 +84,37 @@ public class Resort {
             opinions = new HashSet<>();
         }
         opinions.add(rating);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Resort resort = (Resort) o;
+        return resortId == resort.resortId &&
+                foundationYear == resort.foundationYear &&
+                blueSlopes == resort.blueSlopes &&
+                redSlopes == resort.redSlopes &&
+                blackSlopes == resort.blackSlopes &&
+                chairlifts == resort.chairlifts &&
+                gondolas == resort.gondolas &&
+                tBars == resort.tBars &&
+                platters == resort.platters &&
+                carpets == resort.carpets &&
+                ifSnowPark == resort.ifSnowPark &&
+                numberOfRatings == resort.numberOfRatings &&
+                sumOfRatings == resort.sumOfRatings &&
+                Double.compare(resort.avgRating, avgRating) == 0 &&
+                Objects.equals(apiResortNumber, resort.apiResortNumber) &&
+                Objects.equals(name, resort.name) &&
+                Objects.equals(website, resort.website) &&
+                Objects.equals(location, resort.location) &&
+                Objects.equals(skiMap, resort.skiMap) &&
+                Objects.equals(opinions, resort.opinions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(resortId, apiResortNumber, name, foundationYear, blueSlopes, redSlopes, blackSlopes, chairlifts, gondolas, tBars, platters, carpets, ifSnowPark, numberOfRatings, sumOfRatings, website, location, avgRating, skiMap, opinions);
     }
 }
