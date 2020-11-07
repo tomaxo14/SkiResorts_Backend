@@ -99,4 +99,23 @@ public class UserController {
         String login = principal.getName();
         return ResponseEntity.ok(userService.yourFavourites(login));
     }
+
+    @PostMapping("addPreferences")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> addPreferences(Principal principal, int blue, int red, int black, int snowPark, int location) {
+        String login = principal.getName();
+        int status = userService.addPreferences(login, blue, red, black, snowPark, location);
+        switch (status) {
+            case UserService.STATUS_OK:
+                return ResponseEntity.ok("Dodano preferencje");
+            case UserService.PREFERENCES_CHANGED:
+                return ResponseEntity.ok("Zmieniono preferencje");
+            case UserService.USER_NOT_FOUND:
+                return ResponseEntity.badRequest().body("Nie znaleziono użytkownika");
+            case UserService.VALUE_NOT_IN_RANGE:
+                return ResponseEntity.badRequest().body("Wartości preferencji muszą być liczbami całkowitymi z przedziału <1,5>");
+            default:
+                return ResponseEntity.badRequest().body("Nie udało się dodać preferencji");
+        }
+    }
 }

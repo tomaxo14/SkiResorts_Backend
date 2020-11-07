@@ -1,8 +1,10 @@
 package com.example.skiResorts.services;
 
+import com.example.skiResorts.entities.Preferences;
 import com.example.skiResorts.entities.Rating;
 import com.example.skiResorts.entities.Resort;
 import com.example.skiResorts.entities.User;
+import com.example.skiResorts.repository.PreferencesRepository;
 import com.example.skiResorts.repository.RatingRepository;
 import com.example.skiResorts.repository.ResortRepository;
 import com.example.skiResorts.repository.UserRepository;
@@ -24,18 +26,22 @@ public class UserService {
     public final static int RATING_CHANGED = 4;
     public final static int VALUE_NOT_IN_RANGE = 5;
     public final static int RESORT_NOT_IN_FAVOURITES = 6;
+    public final static int PREFERENCES_CHANGED = 7;
 
     private final UserRepository userRepository;
     private final ResortRepository resortRepository;
     private final RatingRepository ratingRepository;
     private final CounterService counterService;
+    private final PreferencesRepository preferencesRepository;
 
 
-    public UserService(UserRepository userRepository, ResortRepository resortRepository, RatingRepository ratingRepository, CounterService counterService) {
+    public UserService(UserRepository userRepository, ResortRepository resortRepository, RatingRepository ratingRepository, CounterService counterService,
+                       PreferencesRepository preferencesRepository) {
         this.userRepository = userRepository;
         this.resortRepository = resortRepository;
         this.ratingRepository = ratingRepository;
         this.counterService = counterService;
+        this.preferencesRepository = preferencesRepository;
     }
 
     public Optional<User> getUser(String login) {
@@ -194,6 +200,51 @@ public class UserService {
         User user = userOpt.get();
 
         return  user.getFavourites();
+    }
+
+    public int addPreferences(String login, int blue, int red, int black, int snowPark, int location) {
+
+        Optional<User> userOpt = getUser(login);
+        User user;
+        if (userOpt.isPresent()) {
+            user = userOpt.get();
+        } else {
+            return USER_NOT_FOUND;
+        }
+
+        if (!Preferences.possibleValues.contains(blue) || !Preferences.possibleValues.contains(red) || !Preferences.possibleValues.contains(black)
+                || !Preferences.possibleValues.contains(snowPark) || !Preferences.possibleValues.contains(location)) {
+            return VALUE_NOT_IN_RANGE;
+        }
+
+        boolean alreadyHasPreferences = false;
+        if (user.getPreferences() != null) {
+            alreadyHasPreferences = true;
+        }
+        Preferences newPreferences = new Preferences(blue, red, black, snowPark, location);
+        Preferences oldPreferences = null;
+        List<Preferences> allPreferences = preferencesRepository.findAll();
+        for(Preferences preferences : allPreferences) {
+            if(newPreferences.equals(preferences)) {
+                oldPreferences = preferences;
+                break;
+            }
+        }
+
+        if(oldPreferences==null) {
+            newPreferences.setPreferencesId(counterService.getNextId("preferences"));
+            preferencesRepository.save(newPreferences);
+            user.setPreferences(newPreferences);
+        } else {
+            user.setPreferences(oldPreferences);
+        }
+        userRepository.save(user);
+
+        if (alreadyHasPreferences) {
+            return PREFERENCES_CHANGED;
+        }
+
+        return STATUS_OK;
     }
 
 }

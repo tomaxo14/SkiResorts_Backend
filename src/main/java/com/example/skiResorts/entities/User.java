@@ -29,6 +29,7 @@ public class User {
     private Set<Resort> favourites;
     private Set<Rating> ratings;
     private Location location;
+    private Preferences preferences;
 
     public User(){
 
