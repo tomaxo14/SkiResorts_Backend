@@ -247,4 +247,11 @@ public class UserService {
         return STATUS_OK;
     }
 
+    public Preferences yourPreferences(String login) {
+        Optional<User> userOpt = getUser(login);
+        User user = userOpt.get();
+
+        return  user.getPreferences();
+    }
+
 }

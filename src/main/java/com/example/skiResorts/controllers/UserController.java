@@ -118,4 +118,11 @@ public class UserController {
                 return ResponseEntity.badRequest().body("Nie udało się dodać preferencji");
         }
     }
+
+    @GetMapping("yourPreferences")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> yourPreferences(Principal principal) {
+        String login = principal.getName();
+        return ResponseEntity.ok(userService.yourPreferences(login));
+    }
 }

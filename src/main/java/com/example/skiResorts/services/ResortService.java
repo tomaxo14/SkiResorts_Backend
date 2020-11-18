@@ -4,16 +4,14 @@ import com.example.skiResorts.entities.Counter;
 import com.example.skiResorts.entities.Resort;
 import com.example.skiResorts.repository.ResortRepository;
 import com.google.gson.*;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.lang.String.*;
 
 @Service
@@ -96,6 +94,96 @@ public class ResortService {
 
     public Optional<Resort> getResortDetails (int resortId) {
         return resortRepository.findById(resortId);
+    }
+
+    public List<Pair<Resort, Integer>> preferredResorts(int blue, int red, int black, int snowPark, int location) {
+
+        List<Resort> resorts = getAllResorts();
+        List<Pair<Resort, Integer>> resortsWithRatings = new ArrayList<>();
+        int blueR;
+        int redR;
+        int blackR;
+        boolean snowParkR;
+        for (Resort resort: resorts) {
+            blueR = resort.getBlueSlopes();
+            redR = resort.getRedSlopes();
+            blackR = resort.getBlackSlopes();
+            snowParkR = resort.isIfSnowPark();
+            int points = 0;
+            points += calculateSlopesPoints(blue, blueR);
+            points += calculateSlopesPoints(red, redR);
+            points += calculateSlopesPoints(black, blackR);
+            points += calculateSnowPark(snowPark, snowParkR);
+            points +=20; //location
+            Pair<Resort, Integer> pair = Pair.of(resort, points);
+            resortsWithRatings.add(pair);
+        }
+        Collections.sort(resortsWithRatings, Comparator.comparing(p -> -p.getSecond()));
+
+        return resortsWithRatings;
+    }
+
+    private int calculateSlopesPoints (int preferredSlopes, int resortSlopes) {
+
+        switch (preferredSlopes){
+            case 1:
+                return 20;
+            case 2:
+                if(resortSlopes>=1){
+                    return 20;
+                } else {
+                    return 15;
+                }
+            case 3:
+                if(resortSlopes>=3 ){
+                    return 20;
+                } else if(resortSlopes>=1) {
+                    return 10;
+                } else {
+                    return 5;
+                }
+            case 4:
+                if(resortSlopes>=5) {
+                    return 20;
+                } else if(resortSlopes>=3) {
+                    return 10;
+                } else if(resortSlopes>=1) {
+                    return 5;
+                } else {
+                    return 0;
+                }
+            case 5:
+                if(resortSlopes>=10) {
+                    return 20;
+                } else if(resortSlopes>=5) {
+                    return 10;
+                } else if(resortSlopes>=3) {
+                    return 5;
+                } else {
+                    return 0;
+                }
+            default:
+                return 0;
+        }
+    }
+
+    private int calculateSnowPark (int preferredSnowPark, boolean ifSnowPark) {
+
+        if(ifSnowPark) {
+            return 20;
+        }
+        switch(preferredSnowPark) {
+            case 1:
+                return 20;
+            case 2:
+                return 15;
+            case 3:
+                return 10;
+            case 4:
+                return 5;
+            default:
+                return 0;
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.skiResorts.controllers;
 
+import com.example.skiResorts.entities.Preferences;
 import com.example.skiResorts.entities.Resort;
 import com.example.skiResorts.services.ResortService;
 import org.springframework.http.ResponseEntity;
@@ -47,4 +48,8 @@ public class ResortController {
         return ResponseEntity.ok(resortService.importSkiMaps());
     }
 
+    @GetMapping("/preferredResorts")
+    public ResponseEntity<?> preferredResorts(@RequestParam int blue, @RequestParam int red, @RequestParam int black, @RequestParam int snowPark, @RequestParam int location) {
+        return ResponseEntity.ok(resortService.preferredResorts(blue, red, black, snowPark, location));
+    }
 }
