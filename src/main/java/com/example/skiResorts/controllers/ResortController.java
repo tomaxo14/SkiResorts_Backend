@@ -31,10 +31,13 @@ public class ResortController {
 //        Resort resort = new Resort("Białka Tatrzańska", 1990, 10, 8, 3, 4, 1, 5, 3, 1, false);
 //        return ResponseEntity.ok(resortService.addResort(resort));
 //    }
-
     @GetMapping("/resorts")
     public ResponseEntity<?> getAllResorts() {
-        return ResponseEntity.ok(resortService.getAllResorts());
+    return ResponseEntity.ok(resortService.getAllResorts());
+}
+    @GetMapping("/resortsWithGeo")
+    public ResponseEntity<?> getAllResorts(@RequestParam double latitude, @RequestParam double longitude) {
+        return ResponseEntity.ok(resortService.getAllResorts(latitude, longitude));
     }
 
     @GetMapping("/resortDetails")
@@ -49,7 +52,8 @@ public class ResortController {
     }
 
     @GetMapping("/preferredResorts")
-    public ResponseEntity<?> preferredResorts(@RequestParam int blue, @RequestParam int red, @RequestParam int black, @RequestParam int snowPark, @RequestParam int location) {
-        return ResponseEntity.ok(resortService.preferredResorts(blue, red, black, snowPark, location));
+    public ResponseEntity<?> preferredResorts(@RequestParam int blue, @RequestParam int red, @RequestParam int black, @RequestParam int snowPark, @RequestParam int location,
+                                              @RequestParam double userLat, @RequestParam double userLon) {
+        return ResponseEntity.ok(resortService.preferredResorts(blue, red, black, snowPark, location, userLat, userLon));
     }
 }

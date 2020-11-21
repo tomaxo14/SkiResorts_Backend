@@ -36,6 +36,7 @@ public class Resort {
     private double avgRating;
     private String skiMap;
     private Set<Rating> opinions;
+    private double distance;
 
 
     public Resort(String apiResortNumber, String name, String website, Location location) {

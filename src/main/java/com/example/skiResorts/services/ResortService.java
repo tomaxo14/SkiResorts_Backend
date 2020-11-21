@@ -34,8 +34,42 @@ public class ResortService {
         return  STATUS_OK;
     }
 
+    public List<Resort> getAllResorts(double latitude, double longitude) {
+
+        List<Resort> resorts = resortRepository.findAll();
+        List<Resort> resortsWithDistance = new ArrayList<>();
+        if(latitude==0 && longitude==0) {
+            Collections.sort(resorts, Comparator.comparing(p -> -p.getNumberOfRatings()));
+            return resorts;
+        }
+
+        for(Resort resort: resorts) {
+            double resortLat = Double.parseDouble(resort.getLocation().getLatitude());
+            double resortLong = Double.parseDouble(resort.getLocation().getLongitude());
+            double longDiff = longitude - resortLong;
+            double distance = Math.sin(degToRad(latitude)) * Math.sin(degToRad(resortLat)) + Math.cos(degToRad(latitude)) * Math.cos(degToRad(resortLat)) * Math.cos(degToRad(longDiff));
+            distance = Math.acos(distance);
+            distance = radToDeg(distance);
+            distance = distance * 60 * 1.1515 * 1.609344;
+            resort.setDistance(distance);
+            resortsWithDistance.add(resort);
+        }
+        Collections.sort(resortsWithDistance, Comparator.comparing(p -> -p.getNumberOfRatings()));
+        return resortsWithDistance;
+    }
+
+    private double degToRad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double radToDeg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
     public List<Resort> getAllResorts() {
-        return resortRepository.findAll();
+        List<Resort> resorts = resortRepository.findAll();
+        Collections.sort(resorts, Comparator.comparing(p -> -p.getNumberOfRatings()));
+        return resorts;
     }
 
     public int importSkiMaps() throws IOException {
@@ -96,9 +130,10 @@ public class ResortService {
         return resortRepository.findById(resortId);
     }
 
-    public List<Pair<Resort, Integer>> preferredResorts(int blue, int red, int black, int snowPark, int location) {
+    public List<Pair<Resort, Integer>> preferredResorts(int blue, int red, int black, int snowPark, int location, double userLat, double userLon) {
 
         List<Resort> resorts = getAllResorts();
+        
         List<Pair<Resort, Integer>> resortsWithRatings = new ArrayList<>();
         int blueR;
         int redR;
