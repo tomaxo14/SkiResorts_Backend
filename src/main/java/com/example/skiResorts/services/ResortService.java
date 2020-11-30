@@ -59,6 +59,7 @@ public class ResortService {
         return resortsWithDistance;
     }
 
+
     private double degToRad(double deg) {
         return (deg * Math.PI / 180.0);
     }

@@ -40,6 +40,8 @@ public class ResortController {
         return ResponseEntity.ok(resortService.getAllResorts(latitude, longitude));
     }
 
+
+
     @GetMapping("/resortDetails")
     public ResponseEntity<?> getResortDetails(@RequestParam int resortId) {
         return ResponseEntity.ok(resortService.getResortDetails(resortId));

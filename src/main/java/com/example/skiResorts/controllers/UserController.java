@@ -93,6 +93,13 @@ public class UserController {
         return ResponseEntity.ok(userService.yourRatings(login));
     }
 
+    @GetMapping("/favouritesWithGeo")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> getFavouritesWithGeo(Principal principal, @RequestParam double latitude, @RequestParam double longitude) {
+        String login = principal.getName();
+        return ResponseEntity.ok(userService.getFavouritesWithGeo(login, latitude, longitude));
+    }
+
     @GetMapping("yourFavourites")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> yourFavourites(Principal principal) {

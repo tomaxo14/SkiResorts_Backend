@@ -10,11 +10,7 @@ import com.example.skiResorts.repository.ResortRepository;
 import com.example.skiResorts.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -200,6 +196,37 @@ public class UserService {
         User user = userOpt.get();
 
         return  user.getFavourites();
+    }
+
+    public List<Resort>getFavouritesWithGeo(String login, double latitude, double longitude) {
+
+        Set<Resort> favourites = yourFavourites(login);
+        List<Resort> favouritesWithDistance = new ArrayList<>();
+        if (latitude == 0 && longitude == 0) {
+            favouritesWithDistance.addAll(favourites);
+            return favouritesWithDistance;
+        }
+
+        for (Resort resort : favourites) {
+            double resortLat = Double.parseDouble(resort.getLocation().getLatitude());
+            double resortLong = Double.parseDouble(resort.getLocation().getLongitude());
+            double longDiff = longitude - resortLong;
+            double distance = Math.sin(degToRad(latitude)) * Math.sin(degToRad(resortLat)) + Math.cos(degToRad(latitude)) * Math.cos(degToRad(resortLat)) * Math.cos(degToRad(longDiff));
+            distance = Math.acos(distance);
+            distance = radToDeg(distance);
+            distance = distance * 60 * 1.1515 * 1.609344;
+            resort.setDistance(distance);
+            favouritesWithDistance.add(resort);
+        }
+        return favouritesWithDistance;
+    }
+
+    private double degToRad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double radToDeg(double rad) {
+        return (rad * 180.0 / Math.PI);
     }
 
     public int addPreferences(String login, int blue, int red, int black, int snowPark, int location) {
