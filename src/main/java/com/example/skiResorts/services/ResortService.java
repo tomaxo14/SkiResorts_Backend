@@ -1,11 +1,14 @@
 package com.example.skiResorts.services;
 
 import com.example.skiResorts.entities.Counter;
+import com.example.skiResorts.entities.Location;
 import com.example.skiResorts.entities.Resort;
+import com.example.skiResorts.repository.LocationRepository;
 import com.example.skiResorts.repository.ResortRepository;
 import com.google.gson.*;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -22,17 +25,12 @@ public class ResortService {
 
     private final ResortRepository resortRepository;
     private final CounterService counterService;
+    private final LocationRepository locationRepository;
 
-    public ResortService(ResortRepository resortRepository, CounterService counterService) {
+    public ResortService(ResortRepository resortRepository, CounterService counterService, LocationRepository locationRepository) {
         this.resortRepository = resortRepository;
         this.counterService = counterService;
-    }
-
-    public int addResort(Resort resort) {
-
-        resort.setResortId(counterService.getNextId("resort"));
-        resortRepository.save(resort);
-        return STATUS_OK;
+        this.locationRepository = locationRepository;
     }
 
     public List<Resort> getAllResorts(double latitude, double longitude) {
@@ -289,6 +287,49 @@ public class ResortService {
             default:
                 return 0;
         }
+    }
+
+    public int addResort(String name, int blue, int red, int black, int chairlifts, int gondolas, int tBars, int platters,
+                         int carpets, boolean snowpark, String country, double latitude, double longitude, String website) {
+
+        Location location = new Location(String.valueOf(latitude),String.valueOf(longitude), country);
+        location.setLocationId(counterService.getNextId("location"));
+        locationRepository.save(location);
+        Resort resort = new Resort(name, blue, red, black, chairlifts, gondolas, tBars, platters, carpets, snowpark, website, location);
+        resort.setResortId(counterService.getNextId("resort"));
+        resortRepository.save(resort);
+
+        return STATUS_OK;
+    }
+
+    public int editResort(int resortId, String name, int blue, int red, int black, int chairlifts, int gondolas, int tBars, int platters,
+                         int carpets, boolean snowpark, String country, double latitude, double longitude, String website) {
+
+        Optional<Resort> resortOpt = resortRepository.findById(resortId);
+        Resort oldResort = resortOpt.get();
+        Location oldLocation = oldResort.getLocation();
+
+        oldResort.setName(name);
+        oldResort.setBlueSlopes(blue);
+        oldResort.setRedSlopes(red);
+        oldResort.setBlackSlopes(black);
+        oldResort.setChairlifts(chairlifts);
+        oldResort.setGondolas(gondolas);
+        oldResort.setTBars(tBars);
+        oldResort.setPlatters(platters);
+        oldResort.setCarpets(carpets);
+        oldResort.setIfSnowPark(snowpark);
+        oldLocation.setCountry(country);
+        oldLocation.setLatitude(String.valueOf(latitude));
+        oldLocation.setLongitude(String.valueOf(longitude));
+        oldLocation.setLatitude(String.valueOf(latitude));
+        oldResort.setWebsite(website);
+
+        locationRepository.save(oldLocation);
+        oldResort.setLocation(oldLocation);
+        resortRepository.save(oldResort);
+
+        return STATUS_OK;
     }
 
 }

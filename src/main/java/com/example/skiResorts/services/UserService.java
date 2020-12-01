@@ -185,14 +185,16 @@ public class UserService {
         User user = userOpt.get();
         Set<Rating> ratings = user.getRatings();
         List<Rating> ratingsWithResortName = new ArrayList<>();
-        for(Rating rating: ratings) {
-            Optional<Resort> resortOpt = resortRepository.findById(rating.getResort());
-            Resort resort=null;
-            if(resortOpt.isPresent()) {
-                resort = resortOpt.get();
+        if(ratings!=null) {
+            for (Rating rating : ratings) {
+                Optional<Resort> resortOpt = resortRepository.findById(rating.getResort());
+                Resort resort = null;
+                if (resortOpt.isPresent()) {
+                    resort = resortOpt.get();
+                }
+                rating.setResortName(resort.getName());
+                ratingsWithResortName.add(rating);
             }
-            rating.setResortName(resort.getName());
-            ratingsWithResortName.add(rating);
         }
 
         return ratingsWithResortName;

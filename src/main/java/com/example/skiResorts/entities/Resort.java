@@ -1,6 +1,7 @@
 package com.example.skiResorts.entities;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,6 +10,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @Document(collection = "resorts")
@@ -46,7 +48,23 @@ public class Resort {
         this.location = location;
     }
 
-//    public Resort(String name, int foundationYear, int blueSlopes, int redSlopes, int blackSlopes, int chairlifts,
+    public Resort(String name, int blueSlopes, int redSlopes, int blackSlopes, int chairlifts, int gondolas,
+                  int tBars, int platters, int carpets, boolean ifSnowPark, String website, Location location) {
+        this.name = name;
+        this.blueSlopes = blueSlopes;
+        this.redSlopes = redSlopes;
+        this.blackSlopes = blackSlopes;
+        this.chairlifts = chairlifts;
+        this.gondolas = gondolas;
+        this.tBars = tBars;
+        this.platters = platters;
+        this.carpets = carpets;
+        this.ifSnowPark = ifSnowPark;
+        this.website = website;
+        this.location = location;
+    }
+
+    //    public Resort(String name, int foundationYear, int blueSlopes, int redSlopes, int blackSlopes, int chairlifts,
 //                  int gondolas, int tBars, int platters, int carpets, boolean ifSnowPark) {
 //        this.name = name;
 //        this.foundationYear = foundationYear;

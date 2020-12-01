@@ -6,10 +6,7 @@ import com.example.skiResorts.services.ResortService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -58,4 +55,23 @@ public class ResortController {
                                               @RequestParam double userLat, @RequestParam double userLon) {
         return ResponseEntity.ok(resortService.preferredResorts(blue, red, black, snowPark, location, userLat, userLon));
     }
+
+    @PostMapping("/addResort")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> addResort(Principal principal, @RequestParam String name, @RequestParam int blue,  @RequestParam int red,  @RequestParam int black,
+                                       @RequestParam int chairlifts, @RequestParam int gondolas,  @RequestParam int tBars,  @RequestParam int platters,
+                                       @RequestParam int carpets, @RequestParam boolean snowpark,  @RequestParam String country, @RequestParam double latitude,
+                                       @RequestParam double longitude,  @RequestParam String website) {
+        return ResponseEntity.ok(resortService.addResort(name, blue, red, black, chairlifts, gondolas, tBars, platters, carpets, snowpark, country, latitude, longitude, website));
+    }
+
+    @PutMapping("/editResort")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> editResort(Principal principal, @RequestParam int resortId, @RequestParam String name, @RequestParam int blue,  @RequestParam int red,  @RequestParam int black,
+                                       @RequestParam int chairlifts, @RequestParam int gondolas,  @RequestParam int tBars,  @RequestParam int platters,
+                                       @RequestParam int carpets, @RequestParam boolean snowpark,  @RequestParam String country, @RequestParam double latitude,
+                                       @RequestParam double longitude,  @RequestParam String website) {
+        return ResponseEntity.ok(resortService.editResort(resortId, name, blue, red, black, chairlifts, gondolas, tBars, platters, carpets, snowpark, country, latitude, longitude, website));
+    }
+
 }
