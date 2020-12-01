@@ -26,6 +26,11 @@ public class Location {
         this.country = country;
     }
 
+    public Location(String latitude, String longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public Location(String town, String zipCode, String longitude, String latitude) {
         this.town = town;
         this.zipCode = zipCode;

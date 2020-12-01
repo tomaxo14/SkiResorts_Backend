@@ -107,6 +107,21 @@ public class UserController {
         return ResponseEntity.ok(userService.yourFavourites(login));
     }
 
+    @PostMapping("saveLocation")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> saveLocation(Principal principal, @RequestParam double latitude, @RequestParam double longitude) {
+        String login = principal.getName();
+        int status =  userService.saveLocation(login, latitude, longitude);
+        switch (status) {
+            case UserService.STATUS_OK:
+                return ResponseEntity.ok("Zapisano lokalizację");
+            case UserService.USER_NOT_FOUND:
+                return ResponseEntity.badRequest().body("Nie znaleziono użytkownika");
+            default:
+                return ResponseEntity.badRequest().body("Nie udało się zapisać lokalizacji");
+        }
+    }
+
     @PostMapping("addPreferences")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> addPreferences(Principal principal, int blue, int red, int black, int snowPark, int location) {
@@ -131,5 +146,12 @@ public class UserController {
     public ResponseEntity<?> yourPreferences(Principal principal) {
         String login = principal.getName();
         return ResponseEntity.ok(userService.yourPreferences(login));
+    }
+
+    @GetMapping("yourLocation")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> yourLocation(Principal principal) {
+        String login = principal.getName();
+        return ResponseEntity.ok(userService.yourLocation(login));
     }
 }

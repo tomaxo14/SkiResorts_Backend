@@ -22,6 +22,7 @@ public class Rating {
     private Date date;
     private String message;
     public static List<Integer> possibleValues = List.of(1, 2, 3, 4, 5);
+    private String resortName;
 
 
     public Rating(int resort, String user, int value, Date date, String message) {

@@ -1,13 +1,7 @@
 package com.example.skiResorts.services;
 
-import com.example.skiResorts.entities.Preferences;
-import com.example.skiResorts.entities.Rating;
-import com.example.skiResorts.entities.Resort;
-import com.example.skiResorts.entities.User;
-import com.example.skiResorts.repository.PreferencesRepository;
-import com.example.skiResorts.repository.RatingRepository;
-import com.example.skiResorts.repository.ResortRepository;
-import com.example.skiResorts.repository.UserRepository;
+import com.example.skiResorts.entities.*;
+import com.example.skiResorts.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,15 +23,17 @@ public class UserService {
     private final RatingRepository ratingRepository;
     private final CounterService counterService;
     private final PreferencesRepository preferencesRepository;
+    private final LocationRepository locationRepository;
 
 
     public UserService(UserRepository userRepository, ResortRepository resortRepository, RatingRepository ratingRepository, CounterService counterService,
-                       PreferencesRepository preferencesRepository) {
+                       PreferencesRepository preferencesRepository, LocationRepository locationRepository) {
         this.userRepository = userRepository;
         this.resortRepository = resortRepository;
         this.ratingRepository = ratingRepository;
         this.counterService = counterService;
         this.preferencesRepository = preferencesRepository;
+        this.locationRepository = locationRepository;
     }
 
     public Optional<User> getUser(String login) {
@@ -184,11 +180,22 @@ public class UserService {
         return STATUS_OK;
     }
 
-    public Set<Rating> yourRatings(String login) {
+    public List<Rating> yourRatings(String login) {
         Optional<User> userOpt = getUser(login);
         User user = userOpt.get();
+        Set<Rating> ratings = user.getRatings();
+        List<Rating> ratingsWithResortName = new ArrayList<>();
+        for(Rating rating: ratings) {
+            Optional<Resort> resortOpt = resortRepository.findById(rating.getResort());
+            Resort resort=null;
+            if(resortOpt.isPresent()) {
+                resort = resortOpt.get();
+            }
+            rating.setResortName(resort.getName());
+            ratingsWithResortName.add(rating);
+        }
 
-        return user.getRatings();
+        return ratingsWithResortName;
     }
 
     public Set<Resort> yourFavourites(String login) {
@@ -198,7 +205,7 @@ public class UserService {
         return  user.getFavourites();
     }
 
-    public List<Resort>getFavouritesWithGeo(String login, double latitude, double longitude) {
+    public List<Resort> getFavouritesWithGeo(String login, double latitude, double longitude) {
 
         Set<Resort> favourites = yourFavourites(login);
         List<Resort> favouritesWithDistance = new ArrayList<>();
@@ -227,6 +234,22 @@ public class UserService {
 
     private double radToDeg(double rad) {
         return (rad * 180.0 / Math.PI);
+    }
+
+    public int saveLocation(String login, double latitude, double longitude) {
+        Optional<User> userOpt = getUser(login);
+        User user;
+        if (userOpt.isPresent()) {
+            user = userOpt.get();
+        } else {
+            return USER_NOT_FOUND;
+        }
+        Location location = new Location(String.valueOf(latitude), String.valueOf(longitude));
+        location.setLocationId(counterService.getNextId("location"));
+        locationRepository.save(location);
+        user.setLocation(location);
+        userRepository.save(user);
+        return STATUS_OK;
     }
 
     public int addPreferences(String login, int blue, int red, int black, int snowPark, int location) {
@@ -281,4 +304,10 @@ public class UserService {
         return  user.getPreferences();
     }
 
+    public Location yourLocation(String login) {
+        Optional<User> userOpt = getUser(login);
+        User user = userOpt.get();
+
+        return  user.getLocation();
+    }
 }

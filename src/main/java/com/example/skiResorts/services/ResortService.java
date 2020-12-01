@@ -148,8 +148,10 @@ public class ResortService {
             resort.setDistance(distance);
             resortsWithDistance.add(resort);
         }
-        Collections.sort(resortsWithDistance, Comparator.comparing(p -> -p.getDistance()));
 
+        if(userLat!=0 && userLon!=0) {
+            Collections.sort(resortsWithDistance, Comparator.comparing(p -> -p.getDistance()));
+        }
         //liczenie punktów
         List<Pair<Resort, Integer>> resortsWithRatings = new ArrayList<>();
         int blueR;
@@ -168,7 +170,9 @@ public class ResortService {
             points += calculateSlopesPoints(red, redR);
             points += calculateSlopesPoints(black, blackR);
             points += calculateSnowPark(snowPark, snowParkR);
-            points += calculateLocation(location, i, numberOfResorts);
+            if(userLat!=0 && userLon!=0) {
+                points += calculateLocation(location, i, numberOfResorts);
+            }
             Pair<Resort, Integer> pair = Pair.of(resort, points);
             resortsWithRatings.add(pair);
             i++;
