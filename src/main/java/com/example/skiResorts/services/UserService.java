@@ -2,6 +2,7 @@ package com.example.skiResorts.services;
 
 import com.example.skiResorts.entities.*;
 import com.example.skiResorts.repository.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,6 +18,8 @@ public class UserService {
     public final static int VALUE_NOT_IN_RANGE = 5;
     public final static int RESORT_NOT_IN_FAVOURITES = 6;
     public final static int PREFERENCES_CHANGED = 7;
+    public final static int INCORRECT_PASSWORD = 8;
+    public final static int PASSWORDS_NOT_EQUALS = 9;
 
     private final UserRepository userRepository;
     private final ResortRepository resortRepository;
@@ -24,16 +27,18 @@ public class UserService {
     private final CounterService counterService;
     private final PreferencesRepository preferencesRepository;
     private final LocationRepository locationRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public UserService(UserRepository userRepository, ResortRepository resortRepository, RatingRepository ratingRepository, CounterService counterService,
-                       PreferencesRepository preferencesRepository, LocationRepository locationRepository) {
+                       PreferencesRepository preferencesRepository, LocationRepository locationRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.resortRepository = resortRepository;
         this.ratingRepository = ratingRepository;
         this.counterService = counterService;
         this.preferencesRepository = preferencesRepository;
         this.locationRepository = locationRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Optional<User> getUser(String login) {
@@ -311,5 +316,25 @@ public class UserService {
         User user = userOpt.get();
 
         return  user.getLocation();
+    }
+
+    public int changePassword(String login, String oldPassword,
+                              String newPassword1, String newPassword2) {
+        if (newPassword1.equals(newPassword2)) {
+            Optional<User> userOpt = getUser(login);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                    user.setPassword(passwordEncoder.encode(newPassword1));
+                    userRepository.save(user);
+                    return STATUS_OK;
+                } else {
+                    return INCORRECT_PASSWORD;
+                }
+            }
+            return USER_NOT_FOUND;
+        }
+
+        return PASSWORDS_NOT_EQUALS;
     }
 }

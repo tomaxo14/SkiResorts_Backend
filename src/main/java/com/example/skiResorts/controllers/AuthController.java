@@ -1,5 +1,6 @@
 package com.example.skiResorts.controllers;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,18 +19,16 @@ import com.example.skiResorts.repository.RoleRepository;
 import com.example.skiResorts.repository.UserRepository;
 import com.example.skiResorts.security.jwt.JwtUtils;
 import com.example.skiResorts.security.services.UserDetailsImpl;
+import com.example.skiResorts.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -55,13 +54,16 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils,
+                            UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
+        this.userService = userService;
     }
 
     @PostMapping("/signin")
@@ -137,5 +139,33 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PostMapping("/changePassword")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> changePassword(Principal principal,
+                                            @RequestParam String oldPassword,
+                                            @RequestParam String newPassword1,
+                                            @RequestParam String newPassword2) {
+
+        int changed = userService.changePassword(principal.getName(), oldPassword, newPassword1, newPassword2);
+
+        switch (changed) {
+            case UserService.STATUS_OK:
+                return ResponseEntity.ok(new MessageResponse("Hasło zostało zmienione."));
+            case UserService.USER_NOT_FOUND:
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("Nie udało się zmienić hasła- nie znaleziono użytkownika."));
+            case UserService.INCORRECT_PASSWORD:
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("Nie udało się zmienić hasła - niepoprawne hasło."));
+            case UserService.PASSWORDS_NOT_EQUALS:
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("Nie udało się zmienić hasła - hasła nie są identyczne."));
+            default:
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("Nie udało się zmienić hasła."));
+        }
+
     }
 }
