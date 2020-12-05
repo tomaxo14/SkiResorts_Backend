@@ -1,6 +1,6 @@
 package com.example.skiResorts.repository;
 
-import com.example.skiResorts.entities.Resort;
+import com.example.skiResorts.entity.Resort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

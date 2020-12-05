@@ -6,9 +6,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.example.skiResorts.entities.Rating;
-import com.example.skiResorts.entities.Resort;
-import com.example.skiResorts.entities.User;
+import com.example.skiResorts.entity.Rating;
+import com.example.skiResorts.entity.Resort;
+import com.example.skiResorts.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

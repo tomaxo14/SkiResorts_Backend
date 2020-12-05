@@ -1,7 +1,7 @@
 package com.example.skiResorts.repository;
 
-import com.example.skiResorts.entities.ERole;
-import com.example.skiResorts.entities.Role;
+import com.example.skiResorts.entity.ERole;
+import com.example.skiResorts.entity.Role;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

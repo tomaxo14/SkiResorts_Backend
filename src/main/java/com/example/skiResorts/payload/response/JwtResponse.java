@@ -1,8 +1,7 @@
 package com.example.skiResorts.payload.response;
 
-import com.example.skiResorts.entities.Rating;
-import com.example.skiResorts.entities.Resort;
-import lombok.AllArgsConstructor;
+import com.example.skiResorts.entity.Rating;
+import com.example.skiResorts.entity.Resort;
 import lombok.Getter;
 import lombok.Setter;
 

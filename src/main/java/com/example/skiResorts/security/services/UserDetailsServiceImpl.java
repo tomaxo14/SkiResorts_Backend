@@ -1,6 +1,6 @@
 package com.example.skiResorts.security.services;
 
-import com.example.skiResorts.entities.User;
+import com.example.skiResorts.entity.User;
 import com.example.skiResorts.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
