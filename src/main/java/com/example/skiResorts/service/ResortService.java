@@ -124,7 +124,8 @@ public class ResortService {
         return resortRepository.findById(resortId);
     }
 
-    public List<Pair<Resort, Integer>> preferredResorts(int blue, int red, int black, int snowPark, int location, double userLat, double userLon) {
+    public List<Pair<Resort, Integer>> preferredResorts(int blue, int red, int black, int snowPark,
+                                                        int location, double userLat, double userLon) {
 
         List<Resort> resorts = getAllResorts();
 
@@ -133,7 +134,8 @@ public class ResortService {
             double resortLat = Double.parseDouble(resort.getLocation().getLatitude());
             double resortLong = Double.parseDouble(resort.getLocation().getLongitude());
             double longDiff = userLon - resortLong;
-            double distance = Math.sin(degToRad(userLat)) * Math.sin(degToRad(resortLat)) + Math.cos(degToRad(userLat))
+            double distance = Math.sin(degToRad(userLat))
+                    * Math.sin(degToRad(resortLat)) + Math.cos(degToRad(userLat))
                     * Math.cos(degToRad(resortLat)) * Math.cos(degToRad(longDiff));
             distance = Math.acos(distance);
             distance = radToDeg(distance);
