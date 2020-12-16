@@ -2,8 +2,10 @@ package com.example.skiResorts.service;
 
 import com.example.skiResorts.entity.Location;
 import com.example.skiResorts.entity.Resort;
+import com.example.skiResorts.entity.User;
 import com.example.skiResorts.repository.LocationRepository;
 import com.example.skiResorts.repository.ResortRepository;
+import com.example.skiResorts.repository.UserRepository;
 import com.google.gson.*;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,13 @@ public class ResortService {
     private final ResortRepository resortRepository;
     private final CounterService counterService;
     private final LocationRepository locationRepository;
+    private final UserRepository userRepository;
 
-    public ResortService(ResortRepository resortRepository, CounterService counterService, LocationRepository locationRepository) {
+    public ResortService(ResortRepository resortRepository, CounterService counterService, LocationRepository locationRepository, UserRepository userRepository) {
         this.resortRepository = resortRepository;
         this.counterService = counterService;
         this.locationRepository = locationRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Resort> getAllResorts(double latitude, double longitude) {
@@ -326,7 +330,64 @@ public class ResortService {
         oldResort.setLocation(oldLocation);
         resortRepository.save(oldResort);
 
+        List<User> users = userRepository.findAll();
+
+        for(User user : users) {
+            if(user.getFavourites().size()>0) {
+                for (Resort favourite : user.getFavourites()) {
+                    if (favourite.getResortId() == resortId) {
+                        user.getFavourites().remove(favourite);
+                        user.getFavourites().add(oldResort);
+                        userRepository.save(user);
+                    }
+                }
+            }
+
+        }
+
         return STATUS_OK;
     }
 
+    public int generateMissingData() {
+        List<Resort> resorts = getAllResorts();
+
+        for (Resort resort : resorts) {
+            if(resort.getBlueSlopes()==0 && resort.getRedSlopes()==0 && resort.getBlackSlopes()==0){
+                resort.setBlueSlopes(3 + (int)(Math.random() * ((10 - 3) + 1)));
+                resort.setRedSlopes(1 + (int)(Math.random() * ((6 - 1) + 1)));
+                resort.setBlackSlopes((int)(Math.random() * ((3 + 1))));
+                resort.setChairlifts((int)(Math.random() * (3 + 1)));
+                resort.setGondolas((int)(Math.random() * (1 + 1)));
+                resort.setTBars(1 + (int)(Math.random() * ((3 - 1) + 1)));
+                resort.setPlatters(4 + (int)(Math.random() * ((12 - 4) + 1)));
+                resort.setCarpets((int)(Math.random() * (2 + 1)));
+                resort.setNumberOfRatings(1 + (int)(Math.random() * ((2 - 1) + 1)));
+                resort.setSumOfRatings(4 + (int)(Math.random() * ((9 - 4) + 1)));
+                resort.updateAvgRating();
+                int snowPark = (1 + (int)(Math.random() * ((10 - 1) + 1)));
+                if (snowPark>=7) {
+                    resort.setIfSnowPark(true);
+                }
+                resortRepository.save(resort);
+                System.out.println(resort.getName());
+            }
+        }
+
+        return STATUS_OK;
+    }
+
+    public int fixMissingData() {
+        List<Resort> resorts = getAllResorts();
+        for (Resort resort : resorts) {
+            if(resort.getAvgRating()>=5.0) {
+                resort.setNumberOfRatings(2);
+                resort.setSumOfRatings(4 + (int)(Math.random() * ((8 - 4) + 1)));
+                resort.updateAvgRating();
+                resortRepository.save(resort);
+                System.out.println(resort.getName());
+            }
+        }
+
+        return STATUS_OK;
+    }
 }

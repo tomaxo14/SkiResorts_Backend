@@ -4,6 +4,7 @@ import com.example.skiResorts.entity.Location;
 import com.example.skiResorts.entity.Resort;
 import com.example.skiResorts.repository.LocationRepository;
 import com.example.skiResorts.repository.ResortRepository;
+import com.example.skiResorts.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,10 +25,11 @@ public class ResortServiceTest {
     @Mock private ResortRepository resortRepository;
     @Mock private CounterService counterService;
     @Mock private LocationRepository locationRepository;
+    @Mock private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
-        resortService = new ResortService(resortRepository, counterService, locationRepository);
+        resortService = new ResortService(resortRepository, counterService, locationRepository, userRepository);
         List<Resort> resorts = new ArrayList<Resort>();
         resorts.add(new Resort("Białka Tatrzańska", 10, 8, 3,
                 4, 1, 5, 3, 1, false,

@@ -14,15 +14,14 @@ import java.security.Principal;
 public class ResortController {
 
     private final ResortService resortService;
-
     public ResortController(ResortService resortService) {
         this.resortService = resortService;
     }
 
     @GetMapping("/resorts")
     public ResponseEntity<?> getAllResorts() {
-    return ResponseEntity.ok(resortService.getAllResorts());
-}
+        return ResponseEntity.ok(resortService.getAllResorts());
+    }
     @GetMapping("/resortsWithGeo")
     public ResponseEntity<?> getAllResorts(@RequestParam double latitude, @RequestParam double longitude) {
         return ResponseEntity.ok(resortService.getAllResorts(latitude, longitude));
@@ -32,7 +31,6 @@ public class ResortController {
     public ResponseEntity<?> getResortDetails(@RequestParam int resortId) {
         return ResponseEntity.ok(resortService.getResortDetails(resortId));
     }
-
 
     @PostMapping("/importSkiMaps")
     public ResponseEntity<?> importSkiMaps() throws IOException {
@@ -63,6 +61,20 @@ public class ResortController {
                                        @RequestParam double longitude,  @RequestParam String website) {
         return ResponseEntity.ok(resortService.editResort(resortId, name, blue, red, black, chairlifts, gondolas, tBars, platters, carpets, snowpark, country, latitude, longitude, website));
     }
+
+
+    @PutMapping("/generateMissingData")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> generateMissingData(Principal principal) {
+        return ResponseEntity.ok(resortService.generateMissingData());
+    }
+
+    @PutMapping("/fixMissingData")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> dixMissingData(Principal principal) {
+        return ResponseEntity.ok(resortService.fixMissingData());
+    }
+
 //    @PostMapping("/addResort")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
 //    public ResponseEntity<?> addResort(Principal principal) {

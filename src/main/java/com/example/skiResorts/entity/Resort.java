@@ -18,7 +18,6 @@ public class Resort {
 
     @Id
     private int resortId;
-
     private String apiResortNumber;
     private String name;
     private int foundationYear;
